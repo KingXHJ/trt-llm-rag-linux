@@ -36,6 +36,10 @@ from llama_index import set_global_service_context
 from faiss_vector_storage import FaissEmbeddingStorage
 from ui.user_interface import MainInterface
 
+# os.environ['CURL_CA_BUNDLE'] = ''
+# os.environ['HTTP_PROXY'] = "http://0.0.0.0:7890"
+# os.environ['HTTPS_PROXY'] = "http://0.0.0.0:7890"
+
 app_config_file = 'config/app_config.json'
 model_config_file = 'config/config.json'
 preference_config_file = 'config/preferences.json'

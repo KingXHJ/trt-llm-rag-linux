@@ -8,7 +8,9 @@
 
 ### System Requirement
 - Nvidia Driver: `sudo apt install nvidia-driver-535`
-- CUDA: `sudo apt install nvidia-cuda-toolkit`
+- CUDA: 
+    - Recommand: Find a suitable CUDA version from [Nvidia official website](https://developer.nvidia.com/cuda-12-1-0-download-archive)
+    - Not Recommand: `sudo apt install nvidia-cuda-toolkit`
 - NCCL: 
   ```shell
   wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-keyring_1.0-1_all.deb
@@ -23,17 +25,23 @@
    ```shell
    conda create -n trtllm python=3.10
    conda activate trtllm
-   conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
+   # If use the command "conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia", will automatically install the latest version of pytorch. But this will cause ERROR: "FATAL: Decoding operators failed to load. This may be caused by the incompatibility between PyTorch and TensorRT-LLM. Please rebuild and install TensorRT-LLM."
+   # Recommand find pytorch 2.1.1 for CUDA 12.1 from [pytorch official website](https://pytorch.org/get-started/previous-versions/)
+   # Using pip install is also a good choice
+   conda install pytorch==2.1.1 torchvision==0.16.1 torchaudio==2.1.1 pytorch-cuda=12.1 -c pytorch -c nvidia
    conda install -c conda-forge mpi4py mpich
-   pip install --no-cache-dir --extra-index-url https://pypi.nvidia.com tensorrt-llm
+   pip install --no-cache-dir -U --extra-index-url https://pypi.nvidia.com tensorrt-llm
     ``` 
    In China, you can use these command below without vpn:
    ```shell
    conda create -n trtllm python=3.10
    conda activate trtllm
-   conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
+   # If use the command "conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia", will automatically install the latest version of pytorch. But this will cause ERROR: "FATAL: Decoding operators failed to load. This may be caused by the incompatibility between PyTorch and TensorRT-LLM. Please rebuild and install TensorRT-LLM."
+   # Recommand find pytorch 2.1.1 for CUDA 12.1 from [pytorch official website](https://pytorch.org/get-started/previous-versions/)
+   # Using pip install is also a good choice
+   conda install pytorch==2.1.1 torchvision==0.16.1 torchaudio==2.1.1 pytorch-cuda=12.1 -c pytorch -c nvidia
    conda install -c conda-forge mpi4py mpich
-   pip install -i https://pypi.tuna.tsinghua.edu.cn/simple --extra-index-url https://pypi.nvidia.com tensorrt-llm
+   pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -U --extra-index-url https://pypi.nvidia.com tensorrt-llm
     ```
 2. Install the requirements
    ```shell
@@ -71,6 +79,19 @@ place it in `./model/llama/llama13_int4_awq_weights` or `./model/mistral/mistral
    ```shell
    python app.py
     ```
+
+    By the way, if your network is not strong enough, you may get ERROR ```requests.exceptions.ConnectionError: (MaxRetryError("HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /api/models/WhereIsAI/UAE-Large-V1 (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7f18dad3eaa0>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"), '(Request ID: 644e7780-d7cf-4df4-bbb6-ea09377662ab)')```.
+    
+    Certainly, you can fix it by downloading the files previous and changing the code with paths of files. 
+    
+    Recommanded method is to set a proxy for the code, assuming that you have configure a proxy on your computer:
+    ```python
+    import os
+    os.environ['CURL_CA_BUNDLE'] = ''
+    os.environ['HTTP_PROXY'] = "http://0.0.0.0:7890"
+    os.environ['HTTPS_PROXY'] = "http://0.0.0.0:7890"
+    # os.environ['ALL_PROXY'] = "socks5://127.0.0.1:7890"
+    ``` 
 
 
 ---
